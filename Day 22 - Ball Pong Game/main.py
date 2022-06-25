@@ -9,6 +9,7 @@ screen.bgcolor("black")
 screen.setup(width=800, height=600)
 screen.title("PONG GAME")
 screen.tracer(0)
+player1, player2 = screen.textinput(title="Make your bet", prompt="Enter player namess").split()
 
 right_paddle = Paddle((350, 0))
 left_paddle = Paddle((-350, 0))
@@ -41,7 +42,7 @@ while game_is_on:
         ball.new_game()
         score.point("left")
         if score.l_score >= 10:
-            winner = "Left"
+            winner = player1
             game_is_on = False
     
     # Detect if ball goes past left paddle
@@ -49,7 +50,7 @@ while game_is_on:
         ball.new_game()
         score.point("right")
         if score.r_score >= 10:
-            winner = "Right"
+            winner = player2
             game_is_on = False
         
 score.game_over(winner)

@@ -43,10 +43,14 @@ def save():
         messagebox.showinfo(
             title="Oops", message="Please make sure you haven't left any fields empty.")
     else:
-        with open("data.json", "r") as data_file:
-            # json.dump(new_data, data_file, indent=4) # to write to a json file
-            data = json.load(data_file) # to read from a json file
-            data.update(new_data) # to update a existing json file
+        try:
+            with open("data.json", "r") as data_file:
+                # json.dump(new_data, data_file, indent=4) # to write to a json file
+                data = json.load(data_file) # to read from a json file
+                data.update(new_data) # to update a existing json file
+        except FileNotFoundError:
+            print("new data.json file created")
+            data = new_data
 
         with open("data.json", "w") as data_file:
             json.dump(data, data_file, indent=4) # to write the updated data into the json file

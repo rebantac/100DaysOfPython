@@ -3,11 +3,18 @@ import pandas
 import random
 
 BACKGROUND_COLOR = "#B1DDC6"
-
-data = pandas.read_csv("data/french_words.csv")
-to_learn = data.to_dict(orient="records")
-# print(to_learn)
 current_card = {}
+to_learn = {}
+
+try:
+    data = pandas.read_csv("data/words_to_learn.csv")
+except:
+    original_data = pandas.read_csv("data/french_words.csv")
+    to_learn = original_data.to_dict(orient="records")
+else:
+    to_learn = data.to_dict(orient="records")
+    # print(to_learn)
+
 
 
 def next_card():
@@ -25,6 +32,15 @@ def flip_card():
     canvas.itemconfig(card_title, text="English", fill="white")
     canvas.itemconfig(card_word, text=current_card["English"], fill="white")
     canvas.itemconfig(card_background, image=card_back_img)
+
+
+def is_known():
+    """removes the current card from the to_learn dict"""
+    to_learn.remove(current_card)
+    print(len(to_learn))
+    data = pandas.DataFrame(to_learn) # saves the updated list each time the user checks a card as known
+    data.to_csv("data/words_to_learn.csv", index=False) # index=False => the index is not stored into the new .csv file everytime it is overwritten
+    next_card()
 
 
 #------------------------------------- UI DESIGN ------------------------------------------#
@@ -53,7 +69,7 @@ unkwown_btn.grid(row=1, column=0)
 
 # Check Button
 check_img = tkinter.PhotoImage(file="images/right.png")
-kwown_btn = tkinter.Button(image=check_img, highlightthickness=0, command=next_card)
+kwown_btn = tkinter.Button(image=check_img, highlightthickness=0, command=is_known)
 kwown_btn.grid(row=1, column=1)
 
 next_card() # the fnctn is called once so that the french word appears when the window loads up
